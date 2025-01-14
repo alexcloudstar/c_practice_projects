@@ -9,47 +9,64 @@ struct student {
     int grades[GRADES_PER_STUDENT];
 };
 
+struct student* create_student(char *name, int grades[3]);
+void print_student_data(struct student *s);
+void free_student(struct student *s);
 float calc_avg(int grades[GRADES_PER_STUDENT]);
 
 int main() {
-    struct student s_1 = {
-        "Alex",
-        {40, 70, 60}
+    int student_grades[GRADES_PER_STUDENT][GRADES_PER_STUDENT] = {
+        { 90, 75, 82 },
+        { 99, 89, 33 }
     };
 
-    struct student *s_1_ptr = NULL;
+    struct student *s1 = create_student("Alex", student_grades[0]);
+    struct student *s2 = create_student("Bob", student_grades[1]);
 
-    s_1_ptr = malloc(sizeof(struct student) + 15 * sizeof(char));
-    s_1_ptr->name = malloc(15 * sizeof(char));
+    print_student_data(s1);
+    printf("-------------\n");
+    print_student_data(s2);
 
-
-    if(s_1_ptr == NULL) {
-        printf("Memory alocation for s1 ptr");
-        return 1;
-    }
-
-    if(s_1_ptr->name == NULL) {
-        printf("Memory alocation for s1 ptr name");
-        return 1;
-    }
-
-    strcpy(s_1_ptr->name, "Alex");
-
-    s_1_ptr->grades[0] = 40;
-    s_1_ptr->grades[1] = 70;
-    s_1_ptr->grades[2] = 60;
-
-    printf("Student %s, have the following grades:\nGrade 1: %d\nGrade 2: %d\nGrade 3: %d\n", s_1_ptr->name, s_1_ptr->grades[0], s_1_ptr->grades[1], s_1_ptr->grades[2]);
-    
-    float avg = calc_avg(s_1_ptr->grades);
-
-    printf("Student %s, have an average of %.2f\n", s_1_ptr->name, avg);
-
-    free(s_1_ptr->name);
-    free(s_1_ptr);
-    s_1_ptr = NULL;
+    free_student(s1);
+    free_student(s2);
 
     return 0;
+}
+
+
+struct student* create_student(char *name, int grades[3]) {
+    struct student *new_student = NULL;
+    new_student = malloc(sizeof(struct student));
+    new_student->name = malloc(15 * sizeof(char));
+
+    if(new_student == NULL || new_student->name == NULL) {
+        printf("Failed to add memory to new student\nBye now!");
+        exit(1);
+    }
+
+    strcpy(new_student->name, name);
+
+    for (int i = 0; i < GRADES_PER_STUDENT; i++) {
+        new_student->grades[i] = grades[i]; 
+    }
+
+    return new_student;
+}
+
+
+void print_student_data(struct student *s) {
+    int grades[GRADES_PER_STUDENT] = {
+        s->grades[0], s->grades[1], s->grades[2]
+    };
+
+    printf("Student name: %s\n", s->name);
+    printf("Grades: %d %d %d\n", grades[0], grades[1], grades[2]);
+    printf("Student average is: %.2f\n", calc_avg(grades));
+};
+
+void free_student(struct student *s) {
+    free(s->name);
+    free(s);
 }
 
 float calc_avg(int grades[GRADES_PER_STUDENT]) {
@@ -60,4 +77,4 @@ float calc_avg(int grades[GRADES_PER_STUDENT]) {
     }
 
     return avg / GRADES_PER_STUDENT;
-};
+}
