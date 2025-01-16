@@ -13,7 +13,7 @@ struct Todo {
 
 int addTodo(struct Todo *todos, int *count);
 int listTodos(struct Todo *todos, int count);
-int completeTodo(struct Todo *todos, int todo_id);
+int completeTodo(struct Todo *todos);
 
 int main() {
     struct Todo *todos = NULL;
@@ -48,7 +48,7 @@ int main() {
                 listTodos(todos, count);
                 break;
             case 3:
-                completeTodo(todos, 0);
+                completeTodo(todos);
                 break;
             case 4:
                 break;
@@ -116,7 +116,7 @@ int listTodos(struct Todo *todos, int count) {
     return 0;
 };
 
-int completeTodo(struct Todo *todos, int todo_id) {
+int completeTodo(struct Todo *todos) {
     int input = -1;
     printf("What todo you want to complete? ");
     scanf("%d", &input);
